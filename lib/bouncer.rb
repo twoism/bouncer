@@ -1,3 +1,5 @@
 module Bouncer
-  # Your code goes here...
+  autoload :GuestList, 'bouncer/guest_list'
+  extend self
 end
+
