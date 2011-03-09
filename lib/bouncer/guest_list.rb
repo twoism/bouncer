@@ -11,9 +11,9 @@ module Bouncer
       # end
       def can_access resource_name, &block
         @new_resource_name = resource_name
-        def on action, opts={}
+        def on action, &condition 
           bouncer_access_list[@new_resource_name] ||= {}
-          bouncer_access_list[@new_resource_name][action] = opts
+          bouncer_access_list[@new_resource_name][action] = condition
         end
         yield
       end  
@@ -42,17 +42,15 @@ module Bouncer
         self.class.bouncer_access_list
       end
       
-      #  @user.can?(:create, @post, {:site => @site})
+      # @user.can?(:create, @post, {:site => @site})
       def can? action, resource, opts={} 
         resource_actions  = self.bouncer_access_list[resource.class.to_s.downcase.to_sym]
         return false      if resource_actions.nil?
 
         rule_for_action   = resource_actions[action]
         return false      if rule_for_action.nil?
-        
-        conditional       = rule_for_action[:if]
 
-        instance_exec resource, opts, &conditional
+        instance_exec resource, opts, &rule_for_action
       end
     end
 

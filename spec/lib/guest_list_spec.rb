@@ -1,9 +1,8 @@
 require 'spec_helper'
 
 describe Bouncer::GuestList do
-  before do
-    @user = User.new('Chalmers Hundlebottom')
-  end
+
+  before { @user = User.new('Chalmers Hundlebottom') }
 
   describe "#bouncer_access_list" do
     subject { @user.bouncer_access_list }
@@ -15,8 +14,8 @@ describe Bouncer::GuestList do
     it "should contain :show" do
       @user.bouncer_access_list[:post][:show].should_not be_nil
     end
-    it "should contain a proc for :if" do
-      @user.bouncer_access_list[:post][:show][:if].should be_a Proc
+    it "should contain a proc for" do
+      @user.bouncer_access_list[:post][:show].should be_a Proc
     end
   end
 
@@ -32,7 +31,9 @@ describe Bouncer::GuestList do
     it "should not have access to :create for post" do
       @user.can?(:create, @post).should be_false
     end
-
+    it "should have have access to :update for post" do
+      @user.can?(:update, @post).should be_true
+    end
   end
 
 end
